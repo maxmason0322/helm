@@ -1,0 +1,73 @@
+import { pgTable, serial, integer, text, numeric, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+
+export const plaidItems = pgTable('plaid_items', {
+  id: serial('id').primaryKey(),
+  itemId: text('item_id').notNull().unique(),
+  accessToken: text('access_token').notNull(), // Must be encrypted before storage
+  institutionName: text('institution_name'),
+  institutionId: text('institution_id'),
+  cursor: text('cursor'), // Plaid sync cursor
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const accounts = pgTable('accounts', {
+  id: serial('id').primaryKey(),
+  plaidItemId: integer('plaid_item_id').references(() => plaidItems.id),
+  plaidAccountId: text('plaid_account_id').unique(),
+  institution: text('institution'),
+  name: text('name').notNull(),
+  type: text('type').notNull(),
+  subtype: text('subtype'),
+  mask: text('mask'),
+  currentBalance: numeric('current_balance'),
+  availableBalance: numeric('available_balance'),
+  currency: text('currency').default('USD'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const transactions = pgTable('transactions', {
+  id: serial('id').primaryKey(),
+  accountId: integer('account_id').references(() => accounts.id).notNull(),
+  plaidTransactionId: text('plaid_transaction_id').unique(),
+  date: timestamp('date').notNull(),
+  amount: numeric('amount').notNull(),
+  merchant: text('merchant'),
+  name: text('name'),
+  category: text('category'),
+  pending: boolean('pending').default(false),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const holdings = pgTable('holdings', {
+  id: serial('id').primaryKey(),
+  accountId: integer('account_id').references(() => accounts.id).notNull(),
+  ticker: text('ticker'),
+  name: text('name'),
+  quantity: numeric('quantity').notNull(),
+  costBasis: numeric('cost_basis'),
+  marketValue: numeric('market_value'),
+  currency: text('currency').default('USD'),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const investmentTransactions = pgTable('investment_txns', {
+  id: serial('id').primaryKey(),
+  accountId: integer('account_id').references(() => accounts.id).notNull(),
+  date: timestamp('date').notNull(),
+  type: text('type').notNull(), // buy, sell, dividend
+  ticker: text('ticker'),
+  amount: numeric('amount').notNull(),
+  quantity: numeric('quantity'),
+  price: numeric('price'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const activityLog = pgTable('activity_log', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id'),
+  action: text('action').notNull(),
+  metadata: jsonb('metadata'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
