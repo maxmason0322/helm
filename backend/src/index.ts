@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { toNodeHandler } from 'better-auth/node';
+import { auth } from './auth.js';
 import { plaidRouter } from './routes/plaid.js';
 import { accountsRouter } from './routes/accounts.js';
 import { transactionsRouter } from './routes/transactions.js';
@@ -12,7 +14,14 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+
+// Better Auth handler — must be mounted BEFORE express.json()
+app.all('/api/auth/*', toNodeHandler(auth));
+
 app.use(express.json());
 
 app.use('/api/plaid', plaidRouter);

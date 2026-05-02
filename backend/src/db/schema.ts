@@ -1,5 +1,8 @@
 import { pgTable, serial, integer, text, numeric, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
 
+// Re-export Better Auth tables so Drizzle sees the full schema
+export { user, session, account, verification, userRelations, sessionRelations, accountRelations } from './auth-schema.js';
+
 export const plaidItems = pgTable('plaid_items', {
   id: serial('id').primaryKey(),
   itemId: text('item_id').notNull().unique(),
