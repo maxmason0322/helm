@@ -4,7 +4,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './db/index.js';
 
 export const auth = betterAuth({
-  baseURL: `http://localhost:${process.env.PORT || 3001}`,
+  baseURL: process.env.APP_URL || `http://localhost:${process.env.PORT || 3001}`,
   database: drizzleAdapter(db, {
     provider: 'pg',
   }),

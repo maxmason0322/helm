@@ -11,7 +11,7 @@ export const plaidItems = pgTable('plaid_items', {
   institutionId: text('institution_id'),
   cursor: text('cursor'), // Plaid sync cursor
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 });
 
 export const accounts = pgTable('accounts', {
@@ -27,7 +27,7 @@ export const accounts = pgTable('accounts', {
   availableBalance: numeric('available_balance'),
   currency: text('currency').default('USD'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 });
 
 export const transactions = pgTable('transactions', {
@@ -52,7 +52,7 @@ export const holdings = pgTable('holdings', {
   costBasis: numeric('cost_basis'),
   marketValue: numeric('market_value'),
   currency: text('currency').default('USD'),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 });
 
 export const investmentTransactions = pgTable('investment_txns', {
