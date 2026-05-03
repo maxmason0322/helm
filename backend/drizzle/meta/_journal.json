@@ -15,6 +15,13 @@
       "when": 1777423695102,
       "tag": "0001_lonely_cammi",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777823206146,
+      "tag": "0002_serious_starfox",
+      "breakpoints": true
     }
   ]
 }

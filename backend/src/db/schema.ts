@@ -2,6 +2,7 @@ import { pgTable, serial, integer, text, numeric, boolean, timestamp, jsonb } fr
 
 // Re-export Better Auth tables so Drizzle sees the full schema
 export { user, session, account, verification, userRelations, sessionRelations, accountRelations } from './auth-schema.js';
+import { user } from './auth-schema.js';
 
 export const plaidItems = pgTable('plaid_items', {
   id: serial('id').primaryKey(),
@@ -16,7 +17,7 @@ export const plaidItems = pgTable('plaid_items', {
 
 export const accounts = pgTable('accounts', {
   id: serial('id').primaryKey(),
-  plaidItemId: integer('plaid_item_id').references(() => plaidItems.id),
+  plaidItemId: integer('plaid_item_id').references(() => plaidItems.id, { onDelete: 'set null' }),
   plaidAccountId: text('plaid_account_id').unique(),
   institution: text('institution'),
   name: text('name').notNull(),
@@ -28,6 +29,7 @@ export const accounts = pgTable('accounts', {
   currency: text('currency').default('USD'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+  deletedAt: timestamp('deleted_at'),
 });
 
 export const transactions = pgTable('transactions', {
@@ -41,6 +43,7 @@ export const transactions = pgTable('transactions', {
   category: text('category'),
   pending: boolean('pending').default(false),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  deletedAt: timestamp('deleted_at'),
 });
 
 export const holdings = pgTable('holdings', {
@@ -53,6 +56,7 @@ export const holdings = pgTable('holdings', {
   marketValue: numeric('market_value'),
   currency: text('currency').default('USD'),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+  deletedAt: timestamp('deleted_at'),
 });
 
 export const investmentTransactions = pgTable('investment_txns', {
@@ -65,11 +69,12 @@ export const investmentTransactions = pgTable('investment_txns', {
   quantity: numeric('quantity'),
   price: numeric('price'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  deletedAt: timestamp('deleted_at'),
 });
 
 export const activityLog = pgTable('activity_log', {
   id: serial('id').primaryKey(),
-  userId: text('user_id'),
+  userId: text('user_id').references(() => user.id),
   action: text('action').notNull(),
   metadata: jsonb('metadata'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
