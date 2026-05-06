@@ -13,7 +13,7 @@ import { investmentsRouter } from './routes/investments.js';
 import { activityRouter } from './routes/activity.js';
 
 // Validate required env vars at startup
-const required = ['DATABASE_URL', 'JWT_SECRET'] as const;
+const required = ['DATABASE_URL', 'JWT_SECRET', 'ENCRYPTION_KEY', 'PLAID_CLIENT_ID', 'PLAID_SECRET'] as const;
 for (const key of required) {
   if (!process.env[key]) {
     console.error(`Missing required environment variable: ${key}`);
@@ -45,8 +45,22 @@ app.all('/api/auth/*', toNodeHandler(auth));
 
 app.use(express.json());
 
+// Rate limiting on Plaid endpoints — 20 requests per minute per IP
+const plaidLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, try again later' },
+});
+
+// Plaid webhook — public endpoint, no session auth (will use Plaid signature verification in HLM-14)
+app.post('/api/plaid/webhook', (_req, res) => {
+  res.status(501).json({ error: 'Not implemented' });
+});
+
 // Protected API routes
-app.use('/api/plaid', requireAuth, plaidRouter);
+app.use('/api/plaid', requireAuth, plaidLimiter, plaidRouter);
 app.use('/api/accounts', requireAuth, accountsRouter);
 app.use('/api/transactions', requireAuth, transactionsRouter);
 app.use('/api/investments', requireAuth, investmentsRouter);

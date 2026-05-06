@@ -28,7 +28,7 @@ export const auth = betterAuth({
           if (allowedEmails.length > 0 && !allowedEmails.includes(user.email.toLowerCase())) {
             throw new Error('Registration is not available');
           }
-          return user;
+          return { data: user };
         },
       },
     },
