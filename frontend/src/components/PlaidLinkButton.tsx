@@ -3,16 +3,19 @@ import { usePlaidLink } from 'react-plaid-link';
 
 interface PlaidLinkButtonProps {
   onSuccess?: () => void;
+  onError?: (message: string) => void;
 }
 
-export default function PlaidLinkButton({ onSuccess }: PlaidLinkButtonProps) {
+export default function PlaidLinkButton({ onSuccess, onError }: PlaidLinkButtonProps) {
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
+
+  function reportError(msg: string) {
+    onError?.(msg);
+  }
 
   async function fetchLinkToken() {
     setBusy(true);
-    setError('');
     try {
       const res = await fetch('/api/plaid/create-link-token', {
         method: 'POST',
@@ -24,7 +27,7 @@ export default function PlaidLinkButton({ onSuccess }: PlaidLinkButtonProps) {
       setLinkToken(data.link_token);
       setBusy(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to initialize Plaid');
+      reportError(err instanceof Error ? err.message : 'Failed to initialize Plaid');
       setBusy(false);
     }
   }
@@ -32,7 +35,6 @@ export default function PlaidLinkButton({ onSuccess }: PlaidLinkButtonProps) {
   const onPlaidSuccess = useCallback(
     async (publicToken: string, metadata: { institution: { name: string; institution_id: string } | null }) => {
       setBusy(true);
-      setError('');
       try {
         const res = await fetch('/api/plaid/exchange-token', {
           method: 'POST',
@@ -50,12 +52,12 @@ export default function PlaidLinkButton({ onSuccess }: PlaidLinkButtonProps) {
         setLinkToken(null);
         onSuccess?.();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to link account');
+        reportError(err instanceof Error ? err.message : 'Failed to link account');
       } finally {
         setBusy(false);
       }
     },
-    [onSuccess],
+    [onSuccess, onError],
   );
 
   const { open, ready } = usePlaidLink({
@@ -71,17 +73,12 @@ export default function PlaidLinkButton({ onSuccess }: PlaidLinkButtonProps) {
   }, [linkToken, ready, open]);
 
   return (
-    <div>
-      <button
-        onClick={fetchLinkToken}
-        disabled={busy}
-        className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-      >
-        {busy ? 'Connecting...' : 'Link Account'}
-      </button>
-      {error && (
-        <p role="alert" className="mt-2 text-sm text-red-400">{error}</p>
-      )}
-    </div>
+    <button
+      onClick={fetchLinkToken}
+      disabled={busy}
+      className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+    >
+      {busy ? 'Connecting...' : 'Link Account'}
+    </button>
   );
 }

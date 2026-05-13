@@ -3,6 +3,7 @@ import { CountryCode, Products } from 'plaid';
 import { plaidClient } from '../services/plaid.service.js';
 import { encrypt } from '../services/encryption.js';
 import { logActivity } from '../services/activity.js';
+import { syncAccounts } from '../services/account-sync.js';
 import { db } from '../db/index.js';
 import { plaidItems } from '../db/schema.js';
 
@@ -76,8 +77,17 @@ plaidRouter.post('/exchange-token', async (req, res) => {
     });
 
     if (!result) {
-      res.json({ message: 'Account already linked' });
+      res.status(409).json({ error: 'Account already linked' });
       return;
+    }
+
+    // Sync accounts from Plaid immediately after linking
+    try {
+      await syncAccounts(result.id);
+    } catch (syncErr) {
+      const syncMsg = syncErr instanceof Error ? syncErr.message : 'Unknown error';
+      console.error('Initial account sync failed:', syncMsg);
+      // Non-fatal — item is linked, sync can be retried
     }
 
     res.json({ id: result.id });
