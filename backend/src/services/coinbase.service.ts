@@ -107,10 +107,13 @@ export async function getCoinbaseAccounts(): Promise<CoinbaseAccount[]> {
     pages++;
   }
 
-  // Filter to active crypto accounts with non-zero balance
-  return allAccounts.filter(
-    a => a.active && a.type === 'ACCOUNT_TYPE_CRYPTO' && parseFloat(a.available_balance.value) > 0,
-  );
+  // Filter to active crypto accounts with non-zero total balance (available + hold)
+  return allAccounts.filter(a => {
+    if (!a.active || a.type !== 'ACCOUNT_TYPE_CRYPTO') return false;
+    const available = parseFloat(a.available_balance.value) || 0;
+    const hold = parseFloat(a.hold.value) || 0;
+    return (available + hold) > 0;
+  });
 }
 
 export async function getCryptoPrice(currency: string): Promise<number | null> {

@@ -55,7 +55,9 @@ export async function syncCoinbase(): Promise<CoinbaseSyncResult> {
   // Build holdings data
   let totalValue = 0;
   const holdingsData = cryptoAccounts.map(crypto => {
-    const quantity = parseFloat(crypto.available_balance.value);
+    const available = parseFloat(crypto.available_balance.value) || 0;
+    const hold = parseFloat(crypto.hold.value) || 0;
+    const quantity = available + hold;
     const price = priceMap.get(crypto.currency) ?? null;
     const marketValue = price && !isNaN(quantity) ? quantity * price : null;
 
@@ -66,7 +68,7 @@ export async function syncCoinbase(): Promise<CoinbaseSyncResult> {
       plaidSecurityId: `coinbase-${crypto.uuid}`,
       ticker: crypto.currency,
       name: crypto.name,
-      quantity: isNaN(quantity) ? '0' : crypto.available_balance.value,
+      quantity: quantity.toString(),
       costBasis: null as string | null,
       marketValue: marketValue && !isNaN(marketValue) ? marketValue.toString() : null,
       currency: 'USD',
