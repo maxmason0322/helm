@@ -11,6 +11,7 @@ import { accountsRouter } from './routes/accounts.js';
 import { transactionsRouter } from './routes/transactions.js';
 import { investmentsRouter } from './routes/investments.js';
 import { activityRouter } from './routes/activity.js';
+import { coinbaseRouter } from './routes/coinbase.js';
 
 // Validate required env vars at startup
 const required = ['DATABASE_URL', 'JWT_SECRET', 'ENCRYPTION_KEY', 'PLAID_CLIENT_ID', 'PLAID_SECRET'] as const;
@@ -64,6 +65,7 @@ app.use('/api/plaid', requireAuth, plaidLimiter, plaidRouter);
 app.use('/api/accounts', requireAuth, plaidLimiter, accountsRouter);
 app.use('/api/transactions', requireAuth, plaidLimiter, transactionsRouter);
 app.use('/api/investments', requireAuth, plaidLimiter, investmentsRouter);
+app.use('/api/coinbase', requireAuth, plaidLimiter, coinbaseRouter);
 app.use('/api/activity', requireAuth, activityRouter);
 
 app.get('/api/health', (_req, res) => {
