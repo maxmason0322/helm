@@ -62,7 +62,7 @@ app.post('/api/plaid/webhook', (_req, res) => {
 // Protected API routes
 app.use('/api/plaid', requireAuth, plaidLimiter, plaidRouter);
 app.use('/api/accounts', requireAuth, plaidLimiter, accountsRouter);
-app.use('/api/transactions', requireAuth, transactionsRouter);
+app.use('/api/transactions', requireAuth, plaidLimiter, transactionsRouter);
 app.use('/api/investments', requireAuth, investmentsRouter);
 app.use('/api/activity', requireAuth, activityRouter);
 
