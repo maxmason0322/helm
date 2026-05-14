@@ -16,7 +16,7 @@ transactionsRouter.get('/', async (req, res) => {
   if (!req.user) { res.status(401).json({ error: 'Unauthorized' }); return; }
 
   try {
-    const { accountId, startDate, endDate, search, limit, offset } = req.query;
+    const { accountId, category, startDate, endDate, search, limit, offset } = req.query;
 
     const conditions = [
       isNull(transactions.deletedAt),
@@ -37,6 +37,9 @@ transactionsRouter.get('/', async (req, res) => {
       const d = new Date(endDate);
       if (Number.isNaN(d.getTime())) { res.status(400).json({ error: 'Invalid endDate' }); return; }
       conditions.push(lte(transactions.date, d));
+    }
+    if (category && typeof category === 'string') {
+      conditions.push(ilike(transactions.category, category));
     }
     if (search && typeof search === 'string') {
       const pattern = `%${escapeLike(search)}%`;
@@ -82,6 +85,25 @@ transactionsRouter.get('/', async (req, res) => {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Failed to fetch transactions:', message);
     res.status(500).json({ error: 'Failed to fetch transactions' });
+  }
+});
+
+// GET /api/transactions/categories — distinct categories for filter dropdown
+transactionsRouter.get('/categories', async (req, res) => {
+  if (!req.user) { res.status(401).json({ error: 'Unauthorized' }); return; }
+
+  try {
+    const rows = await db
+      .selectDistinct({ category: transactions.category })
+      .from(transactions)
+      .where(and(isNull(transactions.deletedAt), sql`${transactions.category} IS NOT NULL`))
+      .orderBy(transactions.category);
+
+    res.json(rows.map(r => r.category));
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Failed to fetch categories:', message);
+    res.status(500).json({ error: 'Failed to fetch categories' });
   }
 });
 
