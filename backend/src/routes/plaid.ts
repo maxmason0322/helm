@@ -5,6 +5,7 @@ import { encrypt } from '../services/encryption.js';
 import { logActivity } from '../services/activity.js';
 import { syncAccounts } from '../services/account-sync.js';
 import { syncTransactions } from '../services/sync.service.js';
+import { syncInvestments } from '../services/investment-sync.js';
 import { db } from '../db/index.js';
 import { plaidItems } from '../db/schema.js';
 
@@ -19,6 +20,7 @@ plaidRouter.post('/create-link-token', async (req, res) => {
       user: { client_user_id: req.user.id },
       client_name: 'Helm',
       products: [Products.Transactions],
+      optional_products: [Products.Investments],
       country_codes: [CountryCode.Us],
       language: 'en',
     });
@@ -86,6 +88,7 @@ plaidRouter.post('/exchange-token', async (req, res) => {
     try {
       await syncAccounts(result.id);
       await syncTransactions(result.id);
+      await syncInvestments(result.id);
     } catch (syncErr) {
       const syncMsg = syncErr instanceof Error ? syncErr.message : 'Unknown error';
       console.error('Initial sync failed:', syncMsg);

@@ -63,7 +63,7 @@ app.post('/api/plaid/webhook', (_req, res) => {
 app.use('/api/plaid', requireAuth, plaidLimiter, plaidRouter);
 app.use('/api/accounts', requireAuth, plaidLimiter, accountsRouter);
 app.use('/api/transactions', requireAuth, plaidLimiter, transactionsRouter);
-app.use('/api/investments', requireAuth, investmentsRouter);
+app.use('/api/investments', requireAuth, plaidLimiter, investmentsRouter);
 app.use('/api/activity', requireAuth, activityRouter);
 
 app.get('/api/health', (_req, res) => {

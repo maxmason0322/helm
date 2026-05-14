@@ -49,6 +49,7 @@ export const transactions = pgTable('transactions', {
 export const holdings = pgTable('holdings', {
   id: serial('id').primaryKey(),
   accountId: integer('account_id').references(() => accounts.id).notNull(),
+  plaidSecurityId: text('plaid_security_id'),
   ticker: text('ticker'),
   name: text('name'),
   quantity: numeric('quantity').notNull(),
@@ -62,6 +63,7 @@ export const holdings = pgTable('holdings', {
 export const investmentTransactions = pgTable('investment_txns', {
   id: serial('id').primaryKey(),
   accountId: integer('account_id').references(() => accounts.id).notNull(),
+  plaidInvestmentTransactionId: text('plaid_investment_transaction_id').unique(),
   date: timestamp('date').notNull(),
   type: text('type').notNull(), // buy, sell, dividend
   ticker: text('ticker'),
