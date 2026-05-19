@@ -12,7 +12,7 @@ import { plaidItems } from '../db/schema.js';
 export const webhookRouter = Router();
 
 // Use raw body parser for signature verification
-webhookRouter.use(express.raw({ type: 'application/json' }));
+webhookRouter.use(express.raw({ type: 'application/json', limit: '1mb' }));
 
 webhookRouter.post('/', async (req, res) => {
   const rawBody = req.body as Buffer;

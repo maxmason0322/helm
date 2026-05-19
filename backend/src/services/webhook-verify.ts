@@ -45,6 +45,7 @@ export async function verifyPlaidWebhook(rawBody: Buffer, plaidVerification: str
   try {
     const result = await jwtVerify(plaidVerification, key, {
       maxTokenAge: '5 min',
+      algorithms: ['ES256'],
     });
     payload = result.payload as typeof payload;
   } catch (err) {
