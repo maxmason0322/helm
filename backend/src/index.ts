@@ -68,7 +68,7 @@ app.use('/api/transactions', requireAuth, plaidLimiter, transactionsRouter);
 app.use('/api/investments', requireAuth, plaidLimiter, investmentsRouter);
 app.use('/api/coinbase', requireAuth, plaidLimiter, coinbaseRouter);
 app.use('/api/dashboard', requireAuth, plaidLimiter, dashboardRouter);
-app.use('/api/activity', requireAuth, activityRouter);
+app.use('/api/activity', requireAuth, plaidLimiter, activityRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });

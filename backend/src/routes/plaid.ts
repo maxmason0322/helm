@@ -73,7 +73,7 @@ plaidRouter.post('/exchange-token', async (req, res) => {
         await logActivity(req.user!.id, 'account_linked', {
           institution_name: institutionName,
           institution_id: institutionId,
-        });
+        }, tx);
       }
 
       return inserted;
