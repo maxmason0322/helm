@@ -32,10 +32,10 @@ app.use(cors({
   credentials: true,
 }));
 
-// Rate limiting on auth endpoints — 10 requests per minute per IP
+// Rate limiting on auth endpoints — 25 requests per minute per IP
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 10,
+  max: 25,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, try again later' },
@@ -47,10 +47,10 @@ app.all('/api/auth/*', toNodeHandler(auth));
 
 app.use(express.json());
 
-// Rate limiting on Plaid endpoints — 20 requests per minute per IP
+// Rate limiting on API endpoints — 50 requests per minute per IP
 const plaidLimiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 20,
+  max: 50,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, try again later' },
