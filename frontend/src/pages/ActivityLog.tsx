@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Link2, Unlink, RefreshCw, ArrowLeftRight, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link2, Unlink, RefreshCw, ArrowLeftRight, TrendingUp, AlertTriangle, ShieldCheck, Bell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { currencyFmt } from '../lib/format';
 
 interface Activity {
@@ -19,6 +19,13 @@ const actionLabels: Record<string, string> = {
   investments_synced: 'Synced investments',
   coinbase_synced: 'Synced Coinbase',
   account_unlinked: 'Unlinked a financial account',
+  webhook_transactions_synced: 'Auto-synced transactions (webhook)',
+  webhook_holdings_synced: 'Auto-synced holdings (webhook)',
+  webhook_investments_synced: 'Auto-synced investments (webhook)',
+  webhook_item_error: 'Account error detected',
+  webhook_login_repaired: 'Account login repaired',
+  webhook_pending_expiration: 'Account access expiring soon',
+  webhook_new_accounts: 'New accounts available at institution',
 };
 
 const actionIcons: Record<string, React.ElementType> = {
@@ -28,6 +35,13 @@ const actionIcons: Record<string, React.ElementType> = {
   investments_synced: TrendingUp,
   coinbase_synced: TrendingUp,
   account_unlinked: Unlink,
+  webhook_transactions_synced: RefreshCw,
+  webhook_holdings_synced: TrendingUp,
+  webhook_investments_synced: TrendingUp,
+  webhook_item_error: AlertTriangle,
+  webhook_login_repaired: ShieldCheck,
+  webhook_pending_expiration: Bell,
+  webhook_new_accounts: Link2,
 };
 
 function formatTimestamp(dateStr: string): string {

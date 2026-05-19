@@ -16,14 +16,20 @@ plaidRouter.post('/create-link-token', async (req, res) => {
   if (!req.user) { res.status(401).json({ error: 'Unauthorized' }); return; }
 
   try {
-    const response = await plaidClient.linkTokenCreate({
+    const linkConfig: Parameters<typeof plaidClient.linkTokenCreate>[0] = {
       user: { client_user_id: req.user.id },
       client_name: 'Helm',
       products: [Products.Transactions],
       optional_products: [Products.Investments],
       country_codes: [CountryCode.Us],
       language: 'en',
-    });
+    };
+
+    if (process.env.PLAID_WEBHOOK_URL) {
+      linkConfig.webhook = process.env.PLAID_WEBHOOK_URL;
+    }
+
+    const response = await plaidClient.linkTokenCreate(linkConfig);
 
     res.json({ link_token: response.data.link_token });
   } catch (err) {

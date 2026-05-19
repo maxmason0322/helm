@@ -13,6 +13,7 @@ import { investmentsRouter } from './routes/investments.js';
 import { activityRouter } from './routes/activity.js';
 import { coinbaseRouter } from './routes/coinbase.js';
 import { dashboardRouter } from './routes/dashboard.js';
+import { webhookRouter } from './routes/webhook.js';
 
 // Validate required env vars at startup
 const required = ['DATABASE_URL', 'JWT_SECRET', 'ENCRYPTION_KEY', 'PLAID_CLIENT_ID', 'PLAID_SECRET'] as const;
@@ -45,6 +46,16 @@ app.use('/api/auth', authLimiter);
 // Better Auth handler — must be mounted BEFORE express.json()
 app.all('/api/auth/*', toNodeHandler(auth));
 
+// Plaid webhook — must be mounted BEFORE express.json() so raw body is available for signature verification
+const webhookLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests' },
+});
+app.use('/api/plaid/webhook', webhookLimiter, webhookRouter);
+
 app.use(express.json());
 
 // Rate limiting on API endpoints — 50 requests per minute per IP
@@ -54,11 +65,6 @@ const plaidLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, try again later' },
-});
-
-// Plaid webhook — public endpoint, no session auth (will use Plaid signature verification in HLM-14)
-app.post('/api/plaid/webhook', (_req, res) => {
-  res.status(501).json({ error: 'Not implemented' });
 });
 
 // Protected API routes
