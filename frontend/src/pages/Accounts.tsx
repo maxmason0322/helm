@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Unlink } from 'lucide-react';
 import AccountCard from '../components/AccountCard';
 import PlaidLinkButton from '../components/PlaidLinkButton';
 
 interface Account {
   id: number;
+  plaidItemId: number | null;
   institution: string | null;
   name: string;
   type: string;
@@ -19,6 +20,7 @@ export default function Accounts() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [unlinking, setUnlinking] = useState(false);
   const [error, setError] = useState('');
 
   const fetchAccounts = useCallback(async () => {
@@ -52,6 +54,30 @@ export default function Accounts() {
       setError(err instanceof Error ? err.message : 'Failed to sync');
     } finally {
       setSyncing(false);
+    }
+  }
+
+  async function handleUnlink(plaidItemId: number, institutionName: string) {
+    if (!confirm(`Unlink ${institutionName}? Historical transaction data will be preserved but accounts will be removed from active view.`)) {
+      return;
+    }
+    setUnlinking(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/plaid/items/${plaidItemId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        let msg = 'Failed to unlink';
+        try { const data = await res.json(); msg = data.error || msg; } catch {}
+        throw new Error(msg);
+      }
+      await fetchAccounts();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to unlink account');
+    } finally {
+      setUnlinking(false);
     }
   }
 
@@ -112,11 +138,25 @@ export default function Accounts() {
         </div>
       ) : (
         <div className="space-y-8">
-          {grouped.map(([institution, institutionAccounts]) => (
+          {grouped.map(([institution, institutionAccounts]) => {
+            const plaidItemId = institutionAccounts.find(a => a.plaidItemId)?.plaidItemId;
+            return (
             <div key={institution}>
-              <h2 className="mb-3 text-sm font-medium uppercase tracking-wider text-slate-500">
-                {institution}
-              </h2>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-sm font-medium uppercase tracking-wider text-slate-500">
+                  {institution}
+                </h2>
+                {plaidItemId && (
+                  <button
+                    onClick={() => handleUnlink(plaidItemId, institution)}
+                    disabled={unlinking}
+                    className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-slate-500 transition-colors hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  >
+                    <Unlink size={12} />
+                    {unlinking ? 'Unlinking...' : 'Unlink'}
+                  </button>
+                )}
+              </div>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {institutionAccounts.map(account => (
                   <AccountCard
@@ -131,7 +171,8 @@ export default function Accounts() {
                 ))}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
