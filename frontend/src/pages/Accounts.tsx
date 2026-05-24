@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw, Unlink } from 'lucide-react';
+import { RefreshCw, Unlink, Eye, EyeOff } from 'lucide-react';
 import AccountCard from '../components/AccountCard';
 import PlaidLinkButton from '../components/PlaidLinkButton';
 
@@ -14,6 +14,7 @@ interface Account {
   currentBalance: string | null;
   availableBalance: string | null;
   currency: string;
+  hiddenAt: string | null;
 }
 
 export default function Accounts() {
@@ -21,11 +22,13 @@ export default function Accounts() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [unlinking, setUnlinking] = useState(false);
+  const [showHidden, setShowHidden] = useState(false);
   const [error, setError] = useState('');
 
   const fetchAccounts = useCallback(async () => {
     try {
-      const res = await fetch('/api/accounts', { credentials: 'include' });
+      const params = showHidden ? '?includeHidden=true' : '';
+      const res = await fetch(`/api/accounts${params}`, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch accounts');
       const data = await res.json();
       setAccounts(data);
@@ -35,7 +38,7 @@ export default function Accounts() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showHidden]);
 
   useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
 
@@ -48,8 +51,7 @@ export default function Accounts() {
         credentials: 'include',
       });
       if (!res.ok) throw new Error('Sync failed');
-      const data = await res.json();
-      setAccounts(data);
+      await fetchAccounts();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sync');
     } finally {
@@ -81,6 +83,25 @@ export default function Accounts() {
     }
   }
 
+  async function handleToggleHide(accountId: number, isHidden: boolean) {
+    setError('');
+    try {
+      const action = isHidden ? 'unhide' : 'hide';
+      const res = await fetch(`/api/accounts/${accountId}/${action}`, {
+        method: 'PATCH',
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        let msg = `Failed to ${action} account`;
+        try { const data = await res.json(); msg = data.error || msg; } catch {}
+        throw new Error(msg);
+      }
+      await fetchAccounts();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update account');
+    }
+  }
+
   // Group accounts by institution, "Unknown Institution" last
   const grouped = useMemo(() => {
     const groups: Record<string, Account[]> = {};
@@ -95,6 +116,8 @@ export default function Accounts() {
       return a.localeCompare(b);
     });
   }, [accounts]);
+
+  const hiddenCount = accounts.filter(a => a.hiddenAt).length;
 
   if (loading) {
     return (
@@ -122,6 +145,17 @@ export default function Accounts() {
           <PlaidLinkButton onSuccess={fetchAccounts} onError={setError} />
         </div>
       </div>
+
+      {/* Show hidden toggle */}
+      {(hiddenCount > 0 || showHidden) && (
+        <button
+          onClick={() => setShowHidden(v => !v)}
+          className="mb-4 flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 transition-colors"
+        >
+          {showHidden ? <EyeOff size={14} /> : <Eye size={14} />}
+          {showHidden ? 'Hide hidden accounts' : `Show ${hiddenCount} hidden account${hiddenCount !== 1 ? 's' : ''}`}
+        </button>
+      )}
 
       {error && (
         <div role="alert" className="mb-4 rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-400">
@@ -167,6 +201,9 @@ export default function Accounts() {
                     mask={account.mask}
                     currentBalance={account.currentBalance}
                     currency={account.currency}
+                    hidden={!!account.hiddenAt}
+                    onHide={() => handleToggleHide(account.id, false)}
+                    onUnhide={() => handleToggleHide(account.id, true)}
                   />
                 ))}
               </div>

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { isNull, sql, and, gte, desc } from 'drizzle-orm';
+
 import { db } from '../db/index.js';
 import { accounts, transactions } from '../db/schema.js';
 
@@ -29,7 +30,7 @@ dashboardRouter.get('/', async (req, res) => {
           currency: accounts.currency,
         })
         .from(accounts)
-        .where(isNull(accounts.deletedAt))
+        .where(and(isNull(accounts.deletedAt), isNull(accounts.hiddenAt)))
         .orderBy(accounts.institution, accounts.name),
 
       db

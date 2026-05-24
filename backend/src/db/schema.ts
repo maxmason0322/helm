@@ -29,6 +29,7 @@ export const accounts = pgTable('accounts', {
   currency: text('currency').default('USD'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+  hiddenAt: timestamp('hidden_at'),
   deletedAt: timestamp('deleted_at'),
 });
 

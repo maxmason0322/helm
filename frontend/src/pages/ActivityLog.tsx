@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Link2, Unlink, RefreshCw, ArrowLeftRight, TrendingUp, AlertTriangle, ShieldCheck, Bell, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link2, Unlink, EyeOff, Eye, RefreshCw, ArrowLeftRight, TrendingUp, AlertTriangle, ShieldCheck, Bell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { currencyFmt } from '../lib/format';
 
 interface Activity {
@@ -26,6 +26,8 @@ const actionLabels: Record<string, string> = {
   webhook_login_repaired: 'Account login repaired',
   webhook_pending_expiration: 'Account access expiring soon',
   webhook_new_accounts: 'New accounts available at institution',
+  account_hidden: 'Hid an account',
+  account_unhidden: 'Restored a hidden account',
 };
 
 const actionIcons: Record<string, React.ElementType> = {
@@ -42,6 +44,8 @@ const actionIcons: Record<string, React.ElementType> = {
   webhook_login_repaired: ShieldCheck,
   webhook_pending_expiration: Bell,
   webhook_new_accounts: Link2,
+  account_hidden: EyeOff,
+  account_unhidden: Eye,
 };
 
 function formatTimestamp(dateStr: string): string {
