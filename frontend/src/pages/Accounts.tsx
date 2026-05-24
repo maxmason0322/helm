@@ -27,8 +27,8 @@ export default function Accounts() {
 
   const fetchAccounts = useCallback(async () => {
     try {
-      const params = showHidden ? '?includeHidden=true' : '';
-      const res = await fetch(`/api/accounts${params}`, { credentials: 'include' });
+      // Always fetch all accounts (including hidden) so we can show the toggle
+      const res = await fetch('/api/accounts?includeHidden=true', { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch accounts');
       const data = await res.json();
       setAccounts(data);
@@ -38,7 +38,7 @@ export default function Accounts() {
     } finally {
       setLoading(false);
     }
-  }, [showHidden]);
+  }, []);
 
   useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
 
@@ -102,10 +102,11 @@ export default function Accounts() {
     }
   }
 
-  // Group accounts by institution, "Unknown Institution" last
+  // Group visible accounts by institution, "Unknown Institution" last
   const grouped = useMemo(() => {
+    const visible = showHidden ? accounts : accounts.filter(a => !a.hiddenAt);
     const groups: Record<string, Account[]> = {};
-    for (const account of accounts) {
+    for (const account of visible) {
       const key = account.institution || 'Unknown Institution';
       if (!groups[key]) groups[key] = [];
       groups[key].push(account);
@@ -115,7 +116,7 @@ export default function Accounts() {
       if (b === 'Unknown Institution') return -1;
       return a.localeCompare(b);
     });
-  }, [accounts]);
+  }, [accounts, showHidden]);
 
   const hiddenCount = accounts.filter(a => a.hiddenAt).length;
 
