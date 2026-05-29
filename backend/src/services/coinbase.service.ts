@@ -116,6 +116,55 @@ export async function getCoinbaseAccounts(): Promise<CoinbaseAccount[]> {
   });
 }
 
+export interface CoinbaseFill {
+  entry_id: string;
+  trade_id: string;
+  order_id: string;
+  trade_time: string;
+  trade_type: string;
+  price: string;
+  size: string;
+  commission: string;
+  product_id: string;
+  side: string;
+}
+
+interface FillsResponse {
+  fills: CoinbaseFill[];
+  cursor: string;
+}
+
+export async function getCoinbaseFills(): Promise<CoinbaseFill[]> {
+  const allFills: CoinbaseFill[] = [];
+  let cursor = '';
+  let pages = 0;
+
+  // Fetch up to 1 year of trade history
+  const startDate = new Date();
+  startDate.setFullYear(startDate.getFullYear() - 1);
+
+  while (pages < 20) {
+    const params = new URLSearchParams({
+      limit: '100',
+      start_sequence_timestamp: startDate.toISOString(),
+      end_sequence_timestamp: new Date().toISOString(),
+    });
+    if (cursor) params.set('cursor', cursor);
+
+    const data = await coinbaseGet<FillsResponse>(
+      `/api/v3/brokerage/orders/historical/fills?${params}`,
+    );
+
+    allFills.push(...data.fills);
+
+    if (!data.cursor || data.fills.length === 0) break;
+    cursor = data.cursor;
+    pages++;
+  }
+
+  return allFills;
+}
+
 export async function getCryptoPrice(currency: string): Promise<number | null> {
   try {
     const data = await coinbaseGet<ProductResponse>(

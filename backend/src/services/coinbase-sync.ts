@@ -1,12 +1,13 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
-import { accounts, holdings } from '../db/schema.js';
-import { getCoinbaseAccounts, getCryptoPrice } from './coinbase.service.js';
+import { accounts, holdings, investmentTransactions } from '../db/schema.js';
+import { getCoinbaseAccounts, getCryptoPrice, getCoinbaseFills } from './coinbase.service.js';
 
 const COINBASE_ACCOUNT_ID = 'coinbase-portfolio';
 
 export interface CoinbaseSyncResult {
   holdingsSynced: number;
+  tradesSynced: number;
   totalValue: number;
 }
 
@@ -14,7 +15,7 @@ export async function syncCoinbase(): Promise<CoinbaseSyncResult> {
   const cryptoAccounts = await getCoinbaseAccounts();
 
   if (cryptoAccounts.length === 0) {
-    return { holdingsSynced: 0, totalValue: 0 };
+    return { holdingsSynced: 0, tradesSynced: 0, totalValue: 0 };
   }
 
   // Ensure a Coinbase account exists in our accounts table
@@ -89,5 +90,54 @@ export async function syncCoinbase(): Promise<CoinbaseSyncResult> {
       .where(eq(accounts.id, coinbaseAccountId));
   });
 
-  return { holdingsSynced: holdingsData.length, totalValue };
+  // Sync trade history
+  let tradesSynced = 0;
+  try {
+    const fills = await getCoinbaseFills();
+
+    if (fills.length > 0) {
+      const tradesData = fills.map(fill => {
+        const ticker = fill.product_id.split('-')[0]; // "BTC-USD" → "BTC"
+        const size = parseFloat(fill.size) || 0;
+        const price = parseFloat(fill.price) || 0;
+        const amount = size * price;
+
+        return {
+          accountId: coinbaseAccountId,
+          plaidInvestmentTransactionId: `coinbase-${fill.entry_id}`,
+          date: new Date(fill.trade_time),
+          type: fill.side.toLowerCase(), // "BUY" → "buy", "SELL" → "sell"
+          ticker,
+          amount: amount.toString(),
+          quantity: fill.size,
+          price: fill.price,
+        };
+      });
+
+      await db.transaction(async (tx) => {
+        for (const trade of tradesData) {
+          await tx
+            .insert(investmentTransactions)
+            .values(trade)
+            .onConflictDoUpdate({
+              target: investmentTransactions.plaidInvestmentTransactionId,
+              set: {
+                amount: trade.amount,
+                quantity: trade.quantity,
+                price: trade.price,
+                type: trade.type,
+                date: trade.date,
+              },
+            });
+        }
+      });
+
+      tradesSynced = tradesData.length;
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Failed to sync Coinbase trades:', message);
+  }
+
+  return { holdingsSynced: holdingsData.length, tradesSynced, totalValue };
 }

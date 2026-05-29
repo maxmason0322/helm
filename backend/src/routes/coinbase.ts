@@ -18,6 +18,7 @@ coinbaseRouter.post('/sync', async (req, res) => {
 
     await logActivity(req.user.id, 'coinbase_synced', {
       holdings_synced: result.holdingsSynced,
+      trades_synced: result.tradesSynced,
       total_value: result.totalValue,
     });
 
