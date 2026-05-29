@@ -1,7 +1,7 @@
 # Helm — Personal Finance Dashboard
 ## Claude Code Session Context
 
-You are helping me build **Helm**, a personal finance dashboard PWA for household use (2 users: me and my wife). Before writing any code, follow the setup checklist at the bottom of this prompt.
+You are helping me build **Helm**, a personal finance dashboard PWA for household use (2 users). Before writing any code, follow the setup checklist at the bottom of this prompt.
 
 ---
 
@@ -33,12 +33,10 @@ Helm is a self-hosted personal finance dashboard that aggregates all household b
 
 | Institution | Type | Method | Notes |
 |---|---|---|---|
-| Wells Fargo | Bank | Plaid | ✅ Well supported |
-| Chase | Credit card (Prime Visa) | Plaid | ✅ Well supported |
-| USAA | Bank | Plaid | ⚠️ Test early — finicky with MFA |
-| Raisin (NexBank) | High-yield savings | Plaid → fallback CSV | ⚠️ Verify Plaid coverage in sandbox first |
-| Schwab | Brokerage + IRA | Plaid Investments | ✅ Good coverage |
-| Ascensus | 401k | Plaid → fallback manual | ⚠️ Inconsistent — plan for manual entry fallback |
+| Banks | Checking/Savings | Plaid | ✅ Well supported |
+| Credit cards | Credit | Plaid | ✅ Well supported |
+| Brokerage | Brokerage + IRA | Plaid Investments | ✅ Good coverage |
+| 401k providers | Retirement | Plaid → fallback manual | ⚠️ Inconsistent — plan for manual entry fallback |
 | Coinbase | Crypto | Coinbase API (direct) | Use official Coinbase API, not Plaid |
 
 ---
@@ -47,7 +45,7 @@ Helm is a self-hosted personal finance dashboard that aggregates all household b
 1. All accounts linked via Plaid + Coinbase API
 2. Dashboard — net worth summary, account cards, balances
 3. Transactions view — all transactions across all accounts, filterable/searchable
-4. Investments view — holdings, performance (Schwab + Coinbase)
+4. Investments view — holdings, performance (brokerage + Coinbase)
 5. Activity log — tracks which user performed which action (linked account, created budget, etc.)
 
 ## V2 Features (Build After V1 is Solid)
@@ -208,9 +206,8 @@ VITE_NEON_AUTH_URL=
 ---
 
 ## Notes & Gotchas
-- USAA is finicky with third-party aggregators — test it early in sandbox, have a fallback plan
-- Raisin connects through NexBank — verify Plaid coverage before committing
-- Ascensus (401k) has inconsistent Plaid coverage — plan for manual entry or CSV import fallback
+- Some institutions are finicky with third-party aggregators — test early, have a fallback plan
+- Some 401k providers have inconsistent Plaid coverage — plan for manual entry or CSV import fallback
 - Neon Auth open signup issue — enable email verification as a short-term access restriction until Neon ships built-in signup restrictions
 - Neon free tier: projects pause after 1 week of inactivity — unpause from Neon Console if needed (resumes in ~30 seconds)
 - Cloudflare Tunnel (free) is needed to give Plaid webhooks a public URL without exposing home network ports
