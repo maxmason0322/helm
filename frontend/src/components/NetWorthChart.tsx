@@ -14,7 +14,7 @@ const typeLabels: Record<string, string> = {
 };
 
 const typeColors: Record<string, string> = {
-  depository: '#3b82f6',
+  depository: '#10b981',
   investment: '#8b5cf6',
   crypto: '#f59e0b',
   credit: '#ef4444',
@@ -34,9 +34,9 @@ export default function NetWorthChart({ balanceByType }: NetWorthChartProps) {
 
   if (data.length === 0) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-        <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-slate-500">Balance Breakdown</h2>
-        <p className="text-sm text-slate-500">No account data yet</p>
+      <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+        <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-neutral-500">Balance Breakdown</h2>
+        <p className="text-sm text-neutral-500">No account data yet</p>
       </div>
     );
   }
@@ -45,8 +45,8 @@ export default function NetWorthChart({ balanceByType }: NetWorthChartProps) {
   const summary = data.map(d => `${d.name}: ${d.isNegative ? '-' : ''}${currencyFmt.format(d.value)}`).join(', ');
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-slate-500">Balance Breakdown</h2>
+    <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+      <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-neutral-500">Balance Breakdown</h2>
       <div role="img" aria-label={`Balance breakdown: ${summary}`}>
         <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart data={data} layout="vertical" margin={{ left: 10, right: 10 }}>
@@ -55,20 +55,20 @@ export default function NetWorthChart({ balanceByType }: NetWorthChartProps) {
               type="category"
               dataKey="name"
               width={90}
-              tick={{ fill: '#94a3b8', fontSize: 13 }}
+              tick={{ fill: '#a3a3a3', fontSize: 13 }}
               axisLine={false}
               tickLine={false}
             />
             <Tooltip
-              contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
-              labelStyle={{ color: '#e2e8f0' }}
+              contentStyle={{ background: '#171717', border: '1px solid #262626', borderRadius: 8 }}
+              labelStyle={{ color: '#e5e5e5' }}
               formatter={(value: number) => currencyFmt.format(value)}
             />
             <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={24}>
               {data.map((entry) => (
                 <Cell
                   key={entry.type}
-                  fill={entry.isNegative ? '#ef4444' : (typeColors[entry.type] || '#64748b')}
+                  fill={entry.isNegative ? '#ef4444' : (typeColors[entry.type] || '#737373')}
                 />
               ))}
             </Bar>

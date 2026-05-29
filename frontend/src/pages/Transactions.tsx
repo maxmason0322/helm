@@ -132,7 +132,7 @@ export default function Transactions() {
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
-  const inputClass = 'rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950';
+  const inputClass = 'rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950';
 
   return (
     <div>
@@ -141,7 +141,7 @@ export default function Transactions() {
         <button
           onClick={handleSync}
           disabled={syncing}
-          className="flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 transition-colors hover:bg-slate-800 hover:text-white disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          className="flex items-center gap-2 rounded-lg border border-neutral-700 px-3 py-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
         >
           <RefreshCw size={16} className={syncing ? 'animate-spin' : ''} />
           {syncing ? 'Syncing...' : 'Sync'}
@@ -151,7 +151,7 @@ export default function Transactions() {
       {/* Filters */}
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <form onSubmit={handleSearch} className="relative flex min-w-[200px] flex-1 gap-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
           <input
             type="text"
             placeholder="Search merchant or name..."
@@ -162,7 +162,7 @@ export default function Transactions() {
           />
           <button
             type="submit"
-            className="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 hover:bg-slate-800 hover:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            className="rounded-lg border border-neutral-700 px-3 py-2 text-sm text-neutral-400 hover:bg-neutral-800 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
           >
             Search
           </button>
@@ -218,12 +218,12 @@ export default function Transactions() {
       {/* Table */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-white" />
+          <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white" />
         </div>
       ) : transactions.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-700 py-16 text-center">
-          <p className="text-lg text-slate-400">No transactions found</p>
-          <p className="mt-1 text-sm text-slate-500">
+        <div className="rounded-2xl border border-dashed border-neutral-700 py-16 text-center">
+          <p className="text-lg text-neutral-400">No transactions found</p>
+          <p className="mt-1 text-sm text-neutral-500">
             {search || accountFilter || categoryFilter || startDate || endDate
               ? 'Try adjusting your filters'
               : 'Link an account and sync to see transactions'}
@@ -232,10 +232,10 @@ export default function Transactions() {
       ) : (
         <>
           {/* Desktop table */}
-          <div className="hidden overflow-x-auto rounded-xl border border-slate-800 md:block">
+          <div className="hidden overflow-x-auto rounded-xl border border-neutral-800 md:block">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-800 text-left text-xs uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-neutral-800 text-left text-xs uppercase tracking-wider text-neutral-500">
                   <th scope="col" className="px-4 py-3">Date</th>
                   <th scope="col" className="px-4 py-3">Merchant</th>
                   <th scope="col" className="px-4 py-3">Category</th>
@@ -243,13 +243,13 @@ export default function Transactions() {
                   <th scope="col" className="px-4 py-3 text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-neutral-800">
                 {transactions.map(txn => {
                   const amount = parseFloat(txn.amount);
                   const isInflow = amount < 0;
                   return (
-                    <tr key={txn.id} className="hover:bg-slate-900/50">
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-400">
+                    <tr key={txn.id} className="hover:bg-neutral-900/50">
+                      <td className="whitespace-nowrap px-4 py-3 text-neutral-400">
                         {formatDate(txn.date)}
                       </td>
                       <td className="px-4 py-3">
@@ -258,10 +258,10 @@ export default function Transactions() {
                           <span className="inline-block rounded-full bg-yellow-500/10 px-2 py-0.5 text-xs text-yellow-500">Pending</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-slate-400 capitalize">
+                      <td className="px-4 py-3 text-neutral-400 capitalize">
                         {formatCategory(txn.category)}
                       </td>
-                      <td className="px-4 py-3 text-slate-400">
+                      <td className="px-4 py-3 text-neutral-400">
                         {txn.accountName}
                       </td>
                       <td className={`whitespace-nowrap px-4 py-3 text-right font-medium ${isInflow ? 'text-green-400' : 'text-white'}`}>
@@ -280,16 +280,16 @@ export default function Transactions() {
               const amount = parseFloat(txn.amount);
               const isInflow = amount < 0;
               return (
-                <div key={txn.id} className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+                <div key={txn.id} className="rounded-xl border border-neutral-800 bg-neutral-900 p-4">
                   <div className="flex items-start justify-between">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-white">{txn.merchant || txn.name}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-neutral-500">
                         {formatDate(txn.date)} · {txn.accountName}
                       </p>
                       <div className="mt-1 flex items-center gap-2">
                         {txn.category && (
-                          <span className="text-xs text-slate-400 capitalize">{formatCategory(txn.category)}</span>
+                          <span className="text-xs text-neutral-400 capitalize">{formatCategory(txn.category)}</span>
                         )}
                         {txn.pending && (
                           <span className="rounded-full bg-yellow-500/10 px-2 py-0.5 text-xs text-yellow-500">Pending</span>
@@ -308,14 +308,14 @@ export default function Transactions() {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-neutral-500">
                 {page * PAGE_SIZE + 1}\u2013{Math.min((page + 1) * PAGE_SIZE, total)} of {total}
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPage(p => p - 1)}
                   disabled={page === 0}
-                  className="rounded-lg border border-slate-700 p-2 text-slate-400 hover:bg-slate-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  className="rounded-lg border border-neutral-700 p-2 text-neutral-400 hover:bg-neutral-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   aria-label="Previous page"
                 >
                   <ChevronLeft size={16} />
@@ -323,7 +323,7 @@ export default function Transactions() {
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={page >= totalPages - 1}
-                  className="rounded-lg border border-slate-700 p-2 text-slate-400 hover:bg-slate-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  className="rounded-lg border border-neutral-700 p-2 text-neutral-400 hover:bg-neutral-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   aria-label="Next page"
                 >
                   <ChevronRight size={16} />

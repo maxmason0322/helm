@@ -18,8 +18,8 @@ export default defineConfig({
         description: 'Personal Finance Dashboard',
         start_url: '/',
         scope: '/',
-        theme_color: '#0f172a',
-        background_color: '#0f172a',
+        theme_color: '#0a0a0a',
+        background_color: '#0a0a0a',
         display: 'standalone',
         icons: [
           {

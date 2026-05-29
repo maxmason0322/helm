@@ -37,29 +37,29 @@ export default function AccountCard({ name, type, subtype, mask, currentBalance,
   const isOwed = type === 'credit' && balanceNum !== null && balanceNum > 0;
 
   return (
-    <div className={`rounded-2xl border border-slate-800 bg-slate-900 p-5 ${hidden ? 'opacity-50' : ''}`}>
+    <div className={`rounded-2xl border border-neutral-800 bg-neutral-900 p-5 ${hidden ? 'opacity-50' : ''}`}>
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800">
-            <Icon size={20} className="text-slate-400" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800">
+            <Icon size={20} className="text-neutral-400" />
           </div>
           <div>
             <p className="text-sm font-medium text-white">{name}</p>
             {mask && (
-              <p className="text-xs text-slate-500">\u2022\u2022{mask}</p>
+              <p className="text-xs text-neutral-500">\u2022\u2022{mask}</p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-2">
           {subtype && (
-            <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-400 capitalize">
+            <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-400 capitalize">
               {subtype}
             </span>
           )}
           {(onHide || onUnhide) && (
             <button
               onClick={hidden ? onUnhide : onHide}
-              className="rounded-lg p-1 text-slate-500 transition-colors hover:bg-slate-800 hover:text-slate-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="rounded-lg p-1 text-neutral-500 transition-colors hover:bg-neutral-800 hover:text-neutral-300 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
               aria-label={hidden ? 'Show account' : 'Hide account'}
               title={hidden ? 'Show account' : 'Hide account'}
             >
@@ -69,7 +69,7 @@ export default function AccountCard({ name, type, subtype, mask, currentBalance,
         </div>
       </div>
       <div>
-        <p className="text-xs text-slate-500">{isOwed ? 'Balance owed' : 'Balance'}</p>
+        <p className="text-xs text-neutral-500">{isOwed ? 'Balance owed' : 'Balance'}</p>
         <p className={`text-xl font-semibold ${isOwed ? 'text-red-400' : 'text-white'}`}>
           {formatBalance(currentBalance, currency)}
         </p>

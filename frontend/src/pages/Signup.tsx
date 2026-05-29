@@ -4,7 +4,7 @@ import { signUp } from '../auth';
 import AuthLayout from '../components/AuthLayout';
 
 const inputClass =
-  'w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950';
+  'w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-2.5 text-white placeholder-neutral-500 focus:border-emerald-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ export default function Signup() {
         )}
 
         <div>
-          <label htmlFor="name" className="mb-1 block text-sm text-slate-400">
+          <label htmlFor="name" className="mb-1 block text-sm text-neutral-400">
             Name
           </label>
           <input
@@ -60,7 +60,7 @@ export default function Signup() {
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-1 block text-sm text-slate-400">
+          <label htmlFor="email" className="mb-1 block text-sm text-neutral-400">
             Email
           </label>
           <input
@@ -76,7 +76,7 @@ export default function Signup() {
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1 block text-sm text-slate-400">
+          <label htmlFor="password" className="mb-1 block text-sm text-neutral-400">
             Password
           </label>
           <input
@@ -91,7 +91,7 @@ export default function Signup() {
             className={inputClass}
             placeholder="••••••••"
           />
-          <p id="password-hint" className="mt-1 text-xs text-slate-500">
+          <p id="password-hint" className="mt-1 text-xs text-neutral-500">
             Must be at least 8 characters
           </p>
         </div>
@@ -99,17 +99,17 @@ export default function Signup() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-blue-600 py-2.5 font-medium text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          className="w-full rounded-lg bg-emerald-600 py-2.5 font-medium text-white transition-colors hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
         >
           {loading ? 'Creating account...' : 'Create account'}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-neutral-500">
         Already have an account?{' '}
         <Link
           to="/login"
-          className="text-blue-400 hover:text-blue-300 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="text-emerald-400 hover:text-emerald-300 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-emerald-500"
         >
           Sign in
         </Link>

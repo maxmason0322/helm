@@ -67,7 +67,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-white" />
+        <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white" />
       </div>
     );
   }
@@ -89,9 +89,9 @@ export default function Dashboard() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-6 md:p-8"
+        className="rounded-2xl border border-neutral-800 bg-gradient-to-br from-neutral-900 to-neutral-950 p-6 md:p-8"
       >
-        <p className="text-sm font-medium uppercase tracking-wider text-slate-500">Net Worth</p>
+        <p className="text-sm font-medium uppercase tracking-wider text-neutral-500">Net Worth</p>
         <p className={`mt-2 text-4xl font-bold md:text-5xl ${netWorth >= 0 ? 'text-white' : 'text-red-400'}`}>
           {netWorth < 0 && '\u2212'}
           $<CountUp end={Math.abs(netWorth)} duration={1.5} separator="," decimals={0} />
@@ -101,7 +101,7 @@ export default function Dashboard() {
             const icons: Record<string, React.ElementType> = { depository: Wallet, investment: TrendingUp, credit: CreditCard, crypto: TrendingUp };
             const Icon = icons[type] || Wallet;
             return (
-              <div key={type} className="flex items-center gap-2 text-sm text-slate-400">
+              <div key={type} className="flex items-center gap-2 text-sm text-neutral-400">
                 <Icon size={14} />
                 <span className="capitalize">{type === 'depository' ? 'Cash' : type}</span>
                 <span className={value < 0 ? 'text-red-400' : 'text-white'}>
@@ -123,10 +123,10 @@ export default function Dashboard() {
       {accounts.length > 0 && (
         <div>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-slate-500">Accounts</h2>
+            <h2 className="text-sm font-medium uppercase tracking-wider text-neutral-500">Accounts</h2>
             <Link
               to="/accounts"
-              className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
+              className="flex items-center gap-1 text-sm text-emerald-400 hover:text-emerald-300"
             >
               View all <ArrowRight size={14} />
             </Link>
@@ -158,15 +158,15 @@ export default function Dashboard() {
       {recentTransactions.length > 0 && (
         <div>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-slate-500">Recent Transactions</h2>
+            <h2 className="text-sm font-medium uppercase tracking-wider text-neutral-500">Recent Transactions</h2>
             <Link
               to="/transactions"
-              className="flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
+              className="flex items-center gap-1 text-sm text-emerald-400 hover:text-emerald-300"
             >
               View all <ArrowRight size={14} />
             </Link>
           </div>
-          <div className="rounded-xl border border-slate-800 bg-slate-900 divide-y divide-slate-800">
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900 divide-y divide-neutral-800">
             {recentTransactions.map(txn => {
               const amount = parseFloat(txn.amount);
               const isInflow = amount < 0;
@@ -174,7 +174,7 @@ export default function Dashboard() {
                 <div key={txn.id} className="flex items-center justify-between px-4 py-3">
                   <div>
                     <p className="text-sm font-medium text-white">{txn.merchant || txn.name}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-neutral-500">
                       {formatDate(txn.date)}
                       {txn.pending && <span className="ml-1 text-yellow-500">· Pending</span>}
                     </p>
@@ -192,10 +192,10 @@ export default function Dashboard() {
 
       {/* Empty State */}
       {accounts.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-slate-700 py-16 text-center">
-          <p className="text-lg text-slate-400">Welcome to Helm</p>
-          <p className="mt-1 text-sm text-slate-500">
-            <Link to="/accounts" className="text-blue-400 hover:text-blue-300">Link an account</Link> to get started
+        <div className="rounded-2xl border border-dashed border-neutral-700 py-16 text-center">
+          <p className="text-lg text-neutral-400">Welcome to Helm</p>
+          <p className="mt-1 text-sm text-neutral-500">
+            <Link to="/accounts" className="text-emerald-400 hover:text-emerald-300">Link an account</Link> to get started
           </p>
         </div>
       )}

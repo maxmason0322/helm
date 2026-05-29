@@ -7,11 +7,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950">
+      <div className="flex min-h-screen items-center justify-center bg-neutral-950">
         <div
           role="status"
           aria-label="Loading"
-          className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-white"
+          className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white"
         />
       </div>
     );

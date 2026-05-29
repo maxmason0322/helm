@@ -123,7 +123,7 @@ export default function Accounts() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-white" />
+        <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white" />
       </div>
     );
   }
@@ -137,7 +137,7 @@ export default function Accounts() {
             <button
               onClick={handleSync}
               disabled={syncing}
-              className="flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 transition-colors hover:bg-slate-800 hover:text-white disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="flex items-center gap-2 rounded-lg border border-neutral-700 px-3 py-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
             >
               <RefreshCw size={16} className={syncing ? 'animate-spin' : ''} />
               {syncing ? 'Syncing...' : 'Refresh'}
@@ -151,7 +151,7 @@ export default function Accounts() {
       {(hiddenCount > 0 || showHidden) && (
         <button
           onClick={() => setShowHidden(v => !v)}
-          className="mb-4 flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 transition-colors"
+          className="mb-4 flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-300 transition-colors"
         >
           {showHidden ? <EyeOff size={14} /> : <Eye size={14} />}
           {showHidden ? 'Hide hidden accounts' : `Show ${hiddenCount} hidden account${hiddenCount !== 1 ? 's' : ''}`}
@@ -165,9 +165,9 @@ export default function Accounts() {
       )}
 
       {accounts.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-700 py-16 text-center">
-          <p className="text-lg text-slate-400">No accounts linked yet</p>
-          <p className="mt-1 text-sm text-slate-500">
+        <div className="rounded-2xl border border-dashed border-neutral-700 py-16 text-center">
+          <p className="text-lg text-neutral-400">No accounts linked yet</p>
+          <p className="mt-1 text-sm text-neutral-500">
             Click "Link Account" to connect your first bank or card
           </p>
         </div>
@@ -178,14 +178,14 @@ export default function Accounts() {
             return (
             <div key={institution}>
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-medium uppercase tracking-wider text-slate-500">
+                <h2 className="text-sm font-medium uppercase tracking-wider text-neutral-500">
                   {institution}
                 </h2>
                 {plaidItemId && (
                   <button
                     onClick={() => handleUnlink(plaidItemId, institution)}
                     disabled={unlinking}
-                    className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-slate-500 transition-colors hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                    className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-neutral-500 transition-colors hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   >
                     <Unlink size={12} />
                     {unlinking ? 'Unlinking...' : 'Unlink'}

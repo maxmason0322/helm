@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { to: '/activity', label: 'Activity Log', icon: Activity },
 ];
 
-const focusRing = 'focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950';
+const focusRing = 'focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950';
 
 function SidebarLink({ to, label, icon: Icon }: NavItem) {
   return (
@@ -27,8 +27,8 @@ function SidebarLink({ to, label, icon: Icon }: NavItem) {
       className={({ isActive }) =>
         `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${focusRing} ${
           isActive
-            ? 'bg-blue-600/10 text-blue-400'
-            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+            ? 'bg-emerald-600/10 text-emerald-400'
+            : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'
         }`
       }
     >
@@ -45,7 +45,7 @@ function MobileNavLink({ to, label, icon: Icon }: NavItem) {
       end={to === '/'}
       className={({ isActive }) =>
         `flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 text-xs transition-colors ${focusRing} rounded-lg ${
-          isActive ? 'text-blue-400' : 'text-slate-500'
+          isActive ? 'text-emerald-400' : 'text-neutral-500'
         }`
       }
     >
@@ -71,9 +71,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-950">
+    <div className="flex min-h-screen bg-neutral-950">
       {/* Desktop sidebar */}
-      <aside aria-label="Sidebar" className="hidden w-60 flex-col border-r border-slate-800 bg-slate-950 p-4 md:flex">
+      <aside aria-label="Sidebar" className="hidden w-60 flex-col border-r border-neutral-800 bg-neutral-950 p-4 md:flex">
         <div className="mb-8 px-3">
           <h1 className="text-xl font-bold text-white">Helm</h1>
         </div>
@@ -84,19 +84,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        <div className="border-t border-slate-800 pt-4">
+        <div className="border-t border-neutral-800 pt-4">
           <div className="mb-3 px-3">
             <p className="truncate text-sm font-medium text-white">
               {session?.user?.name || 'User'}
             </p>
-            <p className="truncate text-xs text-slate-500">
+            <p className="truncate text-xs text-neutral-500">
               {session?.user?.email}
             </p>
           </div>
           <button
             onClick={handleSignOut}
             disabled={signingOut}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white disabled:opacity-50 ${focusRing}`}
+            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white disabled:opacity-50 ${focusRing}`}
           >
             <LogOut size={18} />
             <span>{signingOut ? 'Signing out...' : 'Sign out'}</span>
@@ -107,14 +107,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <div className="flex flex-1 flex-col pb-20 md:pb-0">
         {/* Mobile header */}
-        <header className="flex items-center justify-between border-b border-slate-800 px-4 py-3 md:hidden">
+        <header className="flex items-center justify-between border-b border-neutral-800 px-4 py-3 md:hidden">
           <h1 className="text-lg font-bold text-white">Helm</h1>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-slate-400">{session?.user?.name}</span>
+            <span className="text-sm text-neutral-400">{session?.user?.name}</span>
             <button
               onClick={handleSignOut}
               disabled={signingOut}
-              className={`text-slate-400 transition-colors hover:text-white disabled:opacity-50 ${focusRing} rounded-lg p-1`}
+              className={`text-neutral-400 transition-colors hover:text-white disabled:opacity-50 ${focusRing} rounded-lg p-1`}
               aria-label="Sign out"
             >
               <LogOut size={20} />
@@ -130,7 +130,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile bottom nav */}
       <nav
         aria-label="Tab bar"
-        className="fixed inset-x-0 bottom-0 flex items-center justify-around border-t border-slate-800 bg-slate-950 py-1 pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed inset-x-0 bottom-0 flex items-center justify-around border-t border-neutral-800 bg-neutral-950 py-1 pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         {navItems.map(item => (
           <MobileNavLink key={item.to} {...item} />

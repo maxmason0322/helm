@@ -103,7 +103,7 @@ export default function ActivityLog() {
   if (loading && activities.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-white" />
+        <div role="status" aria-label="Loading" className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-600 border-t-white" />
       </div>
     );
   }
@@ -112,7 +112,7 @@ export default function ActivityLog() {
     <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Activity Log</h1>
-        <p className="mt-1 text-sm text-slate-500">All actions performed by household members</p>
+        <p className="mt-1 text-sm text-neutral-500">All actions performed by household members</p>
       </div>
 
       {error && (
@@ -122,9 +122,9 @@ export default function ActivityLog() {
       )}
 
       {activities.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-700 py-16 text-center">
-          <p className="text-lg text-slate-400">No activity yet</p>
-          <p className="mt-1 text-sm text-slate-500">Actions like linking accounts and syncing data will appear here</p>
+        <div className="rounded-2xl border border-dashed border-neutral-700 py-16 text-center">
+          <p className="text-lg text-neutral-400">No activity yet</p>
+          <p className="mt-1 text-sm text-neutral-500">Actions like linking accounts and syncing data will appear here</p>
         </div>
       ) : (
         <>
@@ -137,17 +137,17 @@ export default function ActivityLog() {
               return (
                 <div
                   key={activity.id}
-                  className="flex items-start gap-4 rounded-xl px-4 py-3 transition-colors hover:bg-slate-900/50"
+                  className="flex items-start gap-4 rounded-xl px-4 py-3 transition-colors hover:bg-neutral-900/50"
                 >
-                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-800">
-                    <Icon size={16} className="text-slate-400" />
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-800">
+                    <Icon size={16} className="text-neutral-400" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-white">{label}</p>
                     {meta && (
-                      <p className="text-xs text-slate-400">{meta}</p>
+                      <p className="text-xs text-neutral-400">{meta}</p>
                     )}
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-neutral-500">
                       {activity.userName || 'System'} · {formatTimestamp(activity.createdAt)}
                     </p>
                   </div>
@@ -159,14 +159,14 @@ export default function ActivityLog() {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-neutral-500">
                 {page * PAGE_SIZE + 1}\u2013{Math.min((page + 1) * PAGE_SIZE, total)} of {total}
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPage(p => p - 1)}
                   disabled={page === 0}
-                  className="rounded-lg border border-slate-700 p-2 text-slate-400 hover:bg-slate-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  className="rounded-lg border border-neutral-700 p-2 text-neutral-400 hover:bg-neutral-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   aria-label="Previous page"
                 >
                   <ChevronLeft size={16} />
@@ -174,7 +174,7 @@ export default function ActivityLog() {
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={page >= totalPages - 1}
-                  className="rounded-lg border border-slate-700 p-2 text-slate-400 hover:bg-slate-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  className="rounded-lg border border-neutral-700 p-2 text-neutral-400 hover:bg-neutral-800 hover:text-white disabled:opacity-30 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                   aria-label="Next page"
                 >
                   <ChevronRight size={16} />
