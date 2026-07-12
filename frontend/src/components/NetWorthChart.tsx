@@ -49,7 +49,7 @@ export default function NetWorthChart({ balanceByType }: NetWorthChartProps) {
       <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-neutral-500">Balance Breakdown</h2>
       <div role="img" aria-label={`Balance breakdown: ${summary}`}>
         <ResponsiveContainer width="100%" height={chartHeight}>
-          <BarChart data={data} layout="vertical" margin={{ left: 10, right: 10 }}>
+          <BarChart data={data} layout="vertical" margin={{ left: 10, right: 10 }} accessibilityLayer={false}>
             <XAxis type="number" hide />
             <YAxis
               type="category"
@@ -62,7 +62,7 @@ export default function NetWorthChart({ balanceByType }: NetWorthChartProps) {
             <Tooltip
               contentStyle={{ background: '#171717', border: '1px solid #262626', borderRadius: 8 }}
               labelStyle={{ color: '#e5e5e5' }}
-              formatter={(value: number) => currencyFmt.format(value)}
+              formatter={(value) => currencyFmt.format(Number(value))}
             />
             <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={24}>
               {data.map((entry) => (

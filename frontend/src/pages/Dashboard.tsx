@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import CountUp from 'react-countup';
+import CountUpImport from 'react-countup';
+
+// Vite 8's Rolldown dep-optimizer doesn't unwrap this CJS module's `.default`
+// (a needsInterop regression), so the default import can arrive as the module
+// namespace object instead of the component. Normalize it either way.
+const CountUp = (CountUpImport as unknown as { default?: typeof CountUpImport }).default ?? CountUpImport;
 import { Wallet, TrendingUp, CreditCard, ArrowRight } from 'lucide-react';
 import NetWorthChart from '../components/NetWorthChart';
 import SpendingByCategory from '../components/SpendingByCategory';

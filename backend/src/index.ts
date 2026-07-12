@@ -44,7 +44,7 @@ const authLimiter = rateLimit({
 app.use('/api/auth', authLimiter);
 
 // Better Auth handler — must be mounted BEFORE express.json()
-app.all('/api/auth/*', toNodeHandler(auth));
+app.all('/api/auth/*splat', toNodeHandler(auth));
 
 // Plaid webhook — must be mounted BEFORE express.json() so raw body is available for signature verification
 const webhookLimiter = rateLimit({

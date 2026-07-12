@@ -1,6 +1,6 @@
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid';
 
-const validEnvs = ['sandbox', 'development', 'production'] as const;
+const validEnvs = ['sandbox', 'production'] as const;
 const plaidEnv = process.env.PLAID_ENV || 'sandbox';
 
 if (!validEnvs.includes(plaidEnv as typeof validEnvs[number])) {

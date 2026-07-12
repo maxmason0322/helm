@@ -26,7 +26,7 @@ export default function SpendingByCategory({ data }: SpendingByCategoryProps) {
       <div role="img" aria-label={`Spending breakdown: ${summary}. Total: ${currencyFmt.format(total)}`}>
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
           <ResponsiveContainer width={160} height={160} className="shrink-0">
-            <PieChart>
+            <PieChart accessibilityLayer={false}>
               <Pie
                 data={data}
                 dataKey="amount"
@@ -45,7 +45,7 @@ export default function SpendingByCategory({ data }: SpendingByCategoryProps) {
               <Tooltip
                 contentStyle={{ background: '#171717', border: '1px solid #262626', borderRadius: 8 }}
                 labelStyle={{ color: '#e5e5e5' }}
-                formatter={(value: number) => currencyFmt.format(value)}
+                formatter={(value) => currencyFmt.format(Number(value))}
               />
             </PieChart>
           </ResponsiveContainer>
