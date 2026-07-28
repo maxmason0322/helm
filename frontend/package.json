@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
-    "better-auth": "^1.2.0",
+    "better-auth": "^1.6.25",
     "framer-motion": "^12.6.0",
     "lucide-react": "^1.17.0",
     "react": "^19.1.0",
